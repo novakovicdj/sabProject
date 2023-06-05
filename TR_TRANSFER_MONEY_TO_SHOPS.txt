@@ -1,0 +1,79 @@
+create trigger TR_TRANSFER_MONEY_TO_SHOPS
+on Orders
+for update
+as
+begin
+
+if( UPDATE(receivedTime) )
+begin
+	declare @kursor cursor
+	declare @recTime datetime
+	declare @sentTime datetime
+	declare @daysA int
+	declare @daysB int
+	declare @amount int
+	declare @IdO int
+
+	set @kursor = cursor for
+	select receivedTime, IdO, sentTime, daysA, daysB
+	from inserted
+
+	open @kursor
+	fetch next from @kursor
+	into @recTime, @IdO, @sentTime, @daysA, @daysB
+
+	while @@FETCH_STATUS = 0
+	begin
+
+		declare @kursor1 cursor
+		declare @IdS int
+
+		set @kursor1 = cursor for
+		select distinct Article.IdS from Article, inOrder
+		where Article.IdA = inOrder.IdA and inOrder.IdO = @IdO
+
+		open @kursor1
+		fetch next from @kursor1
+		into @IdS
+
+		while @@FETCH_STATUS = 0
+		begin
+			set @amount = (select 0.95 * sum(Article.Price * inOrder.Count * (1 - 1.0 * Shop.Discount / 100.0)) 
+							from Article, inOrder, Shop 
+							where inOrder.IdO = @IdO and inOrder.IdA = Article.IdA and Article.IdS = Shop.IdS and Shop.IdS = @IdS)
+
+			insert into Transactions(IdO, IdS, IdB, Amount, Time) values (@IdO, @IdS, NULL, @amount, DATEADD(d, @daysA + @daysB, @sentTime))
+
+			fetch next from @kursor1
+			into @IdS
+		end
+
+		close @kursor1
+		deallocate @kursor1
+
+		set @amount = (select sum(Amount) from Transactions where IdB = (select IdB from Orders where IdO = @IdO) and Time < @recTime and Time >= dateadd(d, -30, @recTime))
+
+		if @amount > 10000
+		begin
+		insert into Profit(Amount) values ((select 0.03 * sum(Article.Price * inOrder.Count * (1 - 1.0 * Shop.Discount / 100.0)) 
+											from Article, inOrder, Shop where inOrder.IdO = @IdO and inOrder.IdA = Article.IdA and Article.IdS = Shop.IdS))
+		end
+		else
+		begin
+		insert into Profit(Amount) values ((select 0.05 * sum(Article.Price * inOrder.Count * (1 - 1.0 * Shop.Discount / 100.0)) 
+											from Article, inOrder, Shop where inOrder.IdO = @IdO and inOrder.IdA = Article.IdA and Article.IdS = Shop.IdS))
+		end
+
+
+		fetch next from @kursor
+	into @recTime, @IdO, @sentTime, @daysA, @daysB
+	end
+
+	close @kursor
+	deallocate @kursor
+
+	
+
+end
+
+end

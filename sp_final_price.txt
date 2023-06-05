@@ -1,0 +1,20 @@
+create procedure SP_FINAL_PRICE
+@IdO int,
+@time datetime
+as
+begin
+
+declare @amount int
+
+set @amount = (select sum(Amount) from Transactions where IdB = (select IdB from Orders where IdO = @IdO) and Time < @time and Time >= dateadd(d, -30, @time))
+
+if @amount > 10000
+begin
+select 0.98 * sum(Article.Price * inOrder.Count * (1 - 1.0 * Shop.Discount / 100.0)) from Article, inOrder, Shop where inOrder.IdO = @IdO and inOrder.IdA = Article.IdA and Article.IdS = Shop.IdS
+end
+else
+begin
+select sum(Article.Price * inOrder.Count * (1 - 1.0 * Shop.Discount / 100.0)) from Article, inOrder, Shop where inOrder.IdO = @IdO and inOrder.IdA = Article.IdA and Article.IdS = Shop.IdS
+end
+
+end
