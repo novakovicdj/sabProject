@@ -112,7 +112,7 @@ public class BuyerImpl implements BuyerOperations {
         } catch (SQLException ex) {
             Logger.getLogger(BuyerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return BigDecimal.ZERO;
+        return BigDecimal.valueOf(0).setScale(3);
     }
 
     @Override
@@ -261,7 +261,7 @@ public class BuyerImpl implements BuyerOperations {
                 while(rs.next()) {
                     l.add(rs.getInt(1));
                 }
-                return l;
+                return l.size() > 0 ? l : null;
             }  catch (SQLException ex) {
                 Logger.getLogger(BuyerImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -287,7 +287,7 @@ public class BuyerImpl implements BuyerOperations {
         } catch (SQLException ex) {
             Logger.getLogger(BuyerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return BigDecimal.ZERO;
+        return BigDecimal.valueOf(0).setScale(3);
     }
     
 }

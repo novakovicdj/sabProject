@@ -37,7 +37,7 @@ public class GeneralImpl implements GeneralOperations {
         Connection conn = DB.getInstance().getConnection();
         String s = "select * from Orders where receivedTime IS NULL";
         String s1 = "Update Orders set receivedTime = ?, State = 'arrived' where IdO = ?";
-        String s2 = "Update Orders set sentTime = ? where IdO = ?";
+        //String s2 = "Update Orders set sentTime = ? where IdO = ?";
         
         c.add(Calendar.DATE, i);
         

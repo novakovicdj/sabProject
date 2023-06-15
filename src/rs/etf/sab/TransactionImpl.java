@@ -187,7 +187,7 @@ public class TransactionImpl implements TransactionOperations {
         } catch (SQLException ex) {
             Logger.getLogger(TransactionImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return BigDecimal.valueOf(-1);
+        return BigDecimal.valueOf(-1).setScale(3);
     }
 
     @Override

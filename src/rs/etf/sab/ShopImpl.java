@@ -68,7 +68,7 @@ public class ShopImpl implements ShopOperations {
     @Override
     public int getCity(int i) {
         Connection conn = DB.getInstance().getConnection();
-        String s = "select IdC from Shop wher IdS = ?";
+        String s = "select IdC from Shop where IdS = ?";
         try (PreparedStatement ps = conn.prepareStatement(s);){
             ps.setInt(1, i);
             try (ResultSet rs = ps.executeQuery()) {
@@ -149,7 +149,7 @@ public class ShopImpl implements ShopOperations {
                 while(rs.next()) {
                     l.add(rs.getInt(1));
                 }
-                return l;
+                return l.size() > 0 ? l : null;
             }
         } catch (SQLException ex) {
             Logger.getLogger(ShopImpl.class.getName()).log(Level.SEVERE, null, ex);

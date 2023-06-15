@@ -52,7 +52,7 @@ public class CityImpl implements CityOperations {
             while(rs.next()) {
                 l.add(rs.getInt(1));
             }
-            return l;
+            return l.size() > 0 ? l : null;
         } catch (SQLException ex) {
             Logger.getLogger(CityImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -123,7 +123,7 @@ public class CityImpl implements CityOperations {
                         l.add(rs.getInt("IdC1"));
                     }
                 }
-                return l;
+                return l.size() > 0 ? l : null;
             }  catch (SQLException ex) {
                 Logger.getLogger(CityImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -144,7 +144,7 @@ public class CityImpl implements CityOperations {
                 while(rs.next()) {
                     l.add(rs.getInt(1));
                 }
-                return l;
+                return l.size() > 0 ? l : null;
             }  catch (SQLException ex) {
                 Logger.getLogger(CityImpl.class.getName()).log(Level.SEVERE, null, ex);
             }

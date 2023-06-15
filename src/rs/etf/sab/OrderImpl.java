@@ -35,7 +35,6 @@ public class OrderImpl implements OrderOperations {
         this.g = go;
     }
     
-    
 
     @Override
     public int addArticle(int i, int i1, int i2) {
@@ -83,7 +82,7 @@ public class OrderImpl implements OrderOperations {
                         }
                     }
                 } else { // nema kolicine dovoljno
-                    System.out.println("Nema trazene kolicine artikla");
+                    //System.out.println("Nema trazene kolicine artikla");
                     return -1;
                 }
             } catch (SQLException ex) {
@@ -147,7 +146,7 @@ public class OrderImpl implements OrderOperations {
             Logger.getLogger(OrderImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return l;
+        return l.size() > 0 ? l : null;
     }
 
     @Override
@@ -162,7 +161,7 @@ public class OrderImpl implements OrderOperations {
         String q1 = "execute SP_FINAL_PRICE ?, ?"; // +
         String q2 = "update Orders set DaysA = ?, State  = 'sent', Price = ?, sentTime = ? where IdO = ?"; // +
         String q3 = "update Buyer set Credit = Credit - ? where IdB = (select IdB from Orders where IdO = ?)";
-        String q4 = "insert into Transactions(IdO, IdS, IdB, Amount, Time) values (?, NULL, (select IdB from Orders where IdO = ?), ?, ?)";
+        String q4 = "insert into Transactions(IdO, IdS, IdB, Amount, Time) values (?, NULL, (select IdB from Orders where IdO = ?), ?, ?)"; // +
         String q6 = "select * from Orders where IdO = ?"; // +
         String q7 = "select distinct IdC from inOrder, Article, Shop where inOrder.IdO = ? and inOrder.IdA = Article.IdA and Article.IdS = Shop.IdS"; // +
 
@@ -204,7 +203,7 @@ public class OrderImpl implements OrderOperations {
             try (PreparedStatement ps1 = conn.prepareStatement(q2)) {
                 ps1.setInt(1, max);
                 ps1.setDouble(2, price);
-                ps1.setDate(3, new java.sql.Date(g.getCurrentTime().getTimeInMillis())); // ?
+                ps1.setDate(3, new java.sql.Date(g.getCurrentTime().getTimeInMillis())); 
                 ps1.setInt(4, i);
                 
                 if(ps1.executeUpdate() > 0) {
@@ -275,7 +274,7 @@ public class OrderImpl implements OrderOperations {
                         try (ResultSet rs1 = ps1.executeQuery()) {
                             if (rs1.next()) {
                                 price = rs1.getDouble(1);
-                                double discount = 1 - price / sum;
+                                //double discount = 1 - price / sum;
                                 return BigDecimal.valueOf(sum - price).setScale(3);
                             }
                         }
@@ -286,7 +285,7 @@ public class OrderImpl implements OrderOperations {
             Logger.getLogger(OrderImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return BigDecimal.valueOf(-1);
+        return BigDecimal.valueOf(-1).setScale(3);
     }
 
     @Override
@@ -422,7 +421,7 @@ public class OrderImpl implements OrderOperations {
                                     daysDiff -= m.get(l.get(it));
                                 }
                             }
-                            return 0;
+                            //return 0;
                         }
                     } else if(rs.getString("State").equals("arrived")) {
                         if(buyerCity != -1) {
