@@ -177,8 +177,8 @@ public class TransactionImpl implements TransactionOperations {
          Connection conn = DB.getInstance().getConnection();
         String s = "Select Amount from Transactions where IdS = ? and IdO = ? and IdB IS NULL";
         try (PreparedStatement ps = conn.prepareStatement(s);){
-            ps.setInt(1, i1);
-            ps.setInt(2, i);
+            ps.setInt(1, i);
+            ps.setInt(2, i1);
             try (ResultSet rs = ps.executeQuery()) {
                 if(rs.next()) {
                     return BigDecimal.valueOf(rs.getDouble(1)).setScale(3);
