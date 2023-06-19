@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package rs.etf.sab;
+package rs.etf.sab.student;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,7 +15,6 @@ import java.util.List;
 
 import rs.etf.sab.operations.*;
 import org.junit.Test;
-import rs.etf.sab.*;
 import rs.etf.sab.tests.TestHandler;
 import rs.etf.sab.tests.TestRunner;
 
